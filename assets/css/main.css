@@ -1845,17 +1845,6 @@ body.subpage {
   gap: 12px;
 }
 
-/* Button reset when .news-card is a <button> */
-.news-card{
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0;
-  text-align: left;
-  width: 100%;
-  border: none;
-  background: transparent;
-}
-
 .news-card{
   border:1px solid rgba(0,0,0,0.12);
   border-radius: 10px;

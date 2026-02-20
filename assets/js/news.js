@@ -1,123 +1,98 @@
-/*
-  K-Architecture News
-  - Reads content/news.json (generated/updated by Decap CMS)
-  - Renders a vertical, centered list of cards
-  - Shows the detail panel ONLY after clicking a card
-*/
+document.addEventListener('DOMContentLoaded', () => {
+  const newsListEl = document.getElementById('newsList');
+  const newsDetailEl = document.getElementById('newsDetail');
+  const newsLayoutEl = document.getElementById('newsLayout');
 
-(async function () {
-  const listEl = document.getElementById('newsList');
-  const detailEl = document.getElementById('newsDetail');
-  const layoutEl = document.getElementById('newsLayout');
+  if (!newsListEl || !newsDetailEl) return;
 
-  if (!listEl || !detailEl || !layoutEl) return;
+  // Start: show only the list. Detail appears after a click.
+  hideDetail();
 
-  const escapeHtml = (s) => (s ?? '').replace(/[&<>"']/g, (c) => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#039;',
-  }[c]));
-
-  const formatDate = (iso) => {
-    if (!iso) return '';
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return iso;
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${yyyy}-${mm}-${dd}`;
-  };
-
-  const showEmpty = () => {
-    listEl.innerHTML = '<p class="news-empty">No news posts yet.</p>';
-    detailEl.classList.add('is-hidden');
-    layoutEl.classList.remove('has-detail');
-    detailEl.innerHTML = '';
-  };
-
-  try {
-    const res = await fetch('/content/news.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to load news.json');
-
-    /** @type {{title:string,date?:string,thumbnail?:string,image?:string,summary?:string,content?:string,body?:string,slug?:string}[]} */
-    const posts = await res.json();
-
-    if (!Array.isArray(posts) || posts.length === 0) {
-      showEmpty();
-      return;
-    }
-
-    // Newest first (by date), fallback keeps original order.
-    posts.sort((a, b) => {
-      const ad = a?.date ? new Date(a.date).getTime() : 0;
-      const bd = b?.date ? new Date(b.date).getTime() : 0;
-      return bd - ad;
+  fetch('content/news.json')
+    .then(res => res.json())
+    .then(items => {
+      if (!Array.isArray(items) || items.length === 0) {
+        newsListEl.innerHTML = '<p>No news posts yet.</p>';
+        return;
+      }
+      renderList(items);
+    })
+    .catch(err => {
+      console.error('Failed to load news.json', err);
+      newsListEl.innerHTML = '<p>Failed to load news.</p>';
     });
 
-    const renderDetail = (post) => {
-      const title = escapeHtml(post?.title || '');
-      const date = escapeHtml(formatDate(post?.date));
-      const image = post?.image || post?.thumbnail || '';
-      const summary = post?.summary || '';
-      const content = post?.content || post?.body || '';
+  function hideDetail() {
+    newsDetailEl.classList.add('is-hidden');
+    if (newsLayoutEl) newsLayoutEl.classList.remove('has-detail');
+    newsDetailEl.innerHTML = '';
+  }
 
-      detailEl.innerHTML = `
-        <h3>${title}</h3>
-        ${date ? `<p class="meta">${date}</p>` : ''}
-        ${image ? `<img src="${escapeHtml(image)}" alt="${title}" />` : ''}
-        ${summary ? `<p>${escapeHtml(summary)}</p>` : ''}
-        ${content ? `<div class="news-content">${content}</div>` : ''}
-      `;
+  function showDetail() {
+    newsDetailEl.classList.remove('is-hidden');
+    if (newsLayoutEl) newsLayoutEl.classList.add('has-detail');
+  }
 
-      detailEl.classList.remove('is-hidden');
-      layoutEl.classList.add('has-detail');
-    };
-
-    // Build cards
-    listEl.innerHTML = '';
-
-    posts.forEach((post, idx) => {
-      const title = escapeHtml(post?.title || 'Untitled');
-      const date = escapeHtml(formatDate(post?.date));
-      const thumb = post?.thumbnail || post?.image || '';
-
-      const card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'news-card';
-      card.setAttribute('aria-label', `Open news: ${title}`);
-
-      card.innerHTML = `
-        ${thumb ? `<img src="${escapeHtml(thumb)}" alt="${title}" />` : ''}
-        <div class="pad">
-          <p class="title">${title}</p>
-          ${date ? `<p class="meta">${date}</p>` : ''}
+  function renderList(items) {
+    newsListEl.innerHTML = items.map((item, idx) => {
+      const title = item.title || 'Untitled';
+      const date = item.date || '';
+      const image = item.image || '';
+      const excerpt = item.excerpt || '';
+      return `
+        <div class="news-card" data-idx="${idx}">
+          ${image ? `<img src="${image}" alt="${escapeHtml(title)}" />` : ''}
+          <div class="news-card-body">
+            <h3>${escapeHtml(title)}</h3>
+            ${date ? `<div class="news-date">${escapeHtml(date)}</div>` : ''}
+            ${excerpt ? `<p>${escapeHtml(excerpt)}</p>` : ''}
+          </div>
         </div>
       `;
+    }).join('');
 
+    // Attach click handlers
+    [...newsListEl.querySelectorAll('.news-card')].forEach(card => {
       card.addEventListener('click', () => {
-        // Highlight active card
-        listEl.querySelectorAll('.news-card.is-active').forEach((el) => el.classList.remove('is-active'));
-        card.classList.add('is-active');
-        renderDetail(post);
+        const idx = parseInt(card.getAttribute('data-idx'), 10);
+        const item = items[idx];
+        if (!item) return;
+        renderDetail(item);
+        showDetail();
       });
-
-      // Keyboard support (Enter/Space already works for <button>)
-      listEl.appendChild(card);
-
-      // Auto-open first item on large screens? No—user asked click-to-show.
-      if (idx === 0) {
-        // Keep detail hidden until click.
-      }
     });
-
-    // Start with no detail shown.
-    detailEl.classList.add('is-hidden');
-    layoutEl.classList.remove('has-detail');
-
-  } catch (err) {
-    console.error(err);
-    showEmpty();
   }
-})();
+
+  function renderDetail(item) {
+    const title = item.title || '';
+    const date = item.date || '';
+    const image = item.image || '';
+    const body = item.body || item.content || item.description || '';
+    newsDetailEl.innerHTML = `
+      <div class="news-detail-card">
+        <h3>${escapeHtml(title)}</h3>
+        ${date ? `<div class="news-date">${escapeHtml(date)}</div>` : ''}
+        ${image ? `<img src="${image}" alt="${escapeHtml(title)}" />` : ''}
+        ${body ? `<div class="news-body">${formatText(body)}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function formatText(text) {
+    // Turn newlines into paragraphs, keep it simple.
+    const safe = escapeHtml(text);
+    return safe
+      .split(/\n{2,}/)
+      .map(p => `<p>${p.replaceAll('\n', '<br/>')}</p>`)
+      .join('');
+  }
+});

@@ -1,66 +1,77 @@
 <!DOCTYPE HTML>
-
-<!--
-	K-Architecture (static)
-	News page (cards + click-to-show detail)
--->
 <html>
-<head>
-<title>K.Architecture | News</title>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
-<link href="/assets/css/main.css" rel="stylesheet"/>
-<noscript><link href="/assets/css/noscript.css" rel="stylesheet"/></noscript>
+    <head>
+    <title>News</title>
+    <meta charset="utf-8" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    </head>
+    <body>
+    <!-- Header -->
+    <header id="header" class="alt">
+        <div class="logo">
+        <img src="images/Logo21.jpg" alt="" />
+        <a href="index.html">K.Architecture<span> 케이건축사사무소</span></a>
+        </div>
+        <a href="#menu">Menu</a>
+    </header>
+    <!-- Nav -->
+    <nav id="menu">
+      <ul class="links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="aboutus.html">About us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
 </head>
-<body class="is-preload">
-<!-- Wrapper -->
-<div id="wrapper">
-<!-- Header -->
-<header id="header">
-<div class="logo">
-<span class="icon fa-newspaper"></span>
+<body class="subpage">
+    <section id="One" class="wrapper style3">
+        <div class="inner">
+            <header class="align-center">
+                <p>K.ARCHITECTURE</p>
+                <h2>Contact</h2>
+            </header>
+        </div>
+    </section>
+
+    <div id="main" class="container">
+
+<section id="news" class="major">
+  <header class="major">
+    <h2>News</h2>
+    <p>Latest updates</p>
+  </header>
+
+  <div class="news-layout" id="newsLayout">
+    <div class="news-list" id="newsList"></div>
+    <div class="news-detail is-hidden" id="newsDetail"></div>
+  </div>
+</section>
 </div>
-<div class="content">
-<div class="inner">
-<h1>News</h1>
-<p>Latest updates</p>
-</div>
-</div>
-<nav>
-<ul>
-<li><a href="/">Home</a></li>
-<li><a href="/news">News</a></li>
-<li><a href="/aboutus">About</a></li>
-<li><a href="/contact">Contact</a></li>
-</ul>
-</nav>
-</header>
-<!-- Main -->
-<div id="main">
-<article class="active" id="news">
-<h2 class="major">News</h2>
-<p class="news-subtitle">Click a news card to see the details on the right.</p>
-<div class="news-layout" id="newsLayout">
-<!-- Cards (centered, stacked) -->
-<div aria-label="News list" class="news-list" id="newsList"></div>
-<!-- Detail (hidden until a card is clicked) -->
-<div aria-live="polite" class="news-detail is-hidden" id="newsDetail"></div>
-</div>
-</article>
-</div>
-<!-- Footer -->
+
 <footer id="footer">
-<p class="copyright">© K.Architecture. Design: <a href="https://templated.co">TEMPLATED</a>.</p>
-</footer>
-</div>
-<!-- BG -->
-<div id="bg"></div>
-<!-- Scripts -->
+        <div class="container">
+            <ul class="icons">
+            <li><a href="https://x.com/eunjjoun01?t=-OIHQxmU4uOA1Kneg1qt4Q&s=32에서" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="https://www.facebook.com/profile.php?id=61578565045299" class="icon fab fa-facebook"><span class="label">Facebook</span></a></li>
+            <li><a href="https://www.instagram.com/eunjjoun01/?igsh=MXVoMXI2bTRyNmVoNQ%3D%3D" class="icon fab fa-instagram"><span class="label">Instagram</span></a></li>
+        </ul>
+        </div>
+    </footer>
 
+    <div class="copyright">
+        Kwon Eun Jeong <a href="index.html"> K.Architecture</a>.
+    </div>
 
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/news.js"></script>
+<script src="assets/js/main.js"></script>
 
-
-
-
-<script src="/assets/js/jquery.min.js"></script><script src="/assets/js/jquery.scrollex.min.js"></script><script src="/assets/js/skel.min.js"></script><script src="/assets/js/util.js"></script><script src="/assets/js/main.js"></script><script src="/assets/js/news.js"></script></body>
+</body>
 </html>
