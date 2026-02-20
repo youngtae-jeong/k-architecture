@@ -7,7 +7,9 @@
 (async function () {
   const listEl = document.getElementById("newsList");
   const detailEl = document.getElementById("newsDetail");
-  if (!listEl || !detailEl) return;
+  
+  if (detailEl) { detailEl.innerHTML = `<h3>News</h3><p class="news-hint">Click a news card to read details.</p>`; }
+if (!listEl || !detailEl) return;
 
   function escapeHtml(s) {
     return String(s || "").replace(/[&<>"']/g, (m) => ({
@@ -28,9 +30,9 @@
     listEl.innerHTML = items.map((item) => `
       <div class="news-card" data-slug="${escapeHtml(item.slug)}">
         ${item.thumbnail ? `<img src="${escapeHtml(item.thumbnail)}" alt="">` : ""}
-        <div class="pad">
+        <div class="content">
           <p class="title">${escapeHtml(item.title)}</p>
-          <p class="meta">${escapeHtml((item.date || "").slice(0, 10))}</p>
+          <p class="date">${escapeHtml((item.date || "").slice(0, 10))}</p>
           ${item.summary ? `<p class="meta">${escapeHtml(item.summary)}</p>` : ""}
         </div>
       </div>
@@ -49,10 +51,9 @@
     const date = (item.date || "").slice(0, 10);
     // Display markdown as plain text (simple, safe). If you want rich markdown later, we can add a renderer.
     detailEl.innerHTML = `
-      <h3 style="margin:0 0 6px;">${escapeHtml(item.title)}</h3>
-      ${date ? `<div style="opacity:.7; margin-bottom:10px;">${escapeHtml(date)}</div>` : ""}
-      ${item.thumbnail ? `<div style="margin:0 0 10px;"><img src="${escapeHtml(item.thumbnail)}" alt="" style="width:100%; border-radius:10px;"></div>` : ""}
-      <div style="line-height:1.7; white-space:pre-wrap;">${escapeHtml(item.body || "")}</div>
+      <h3>${escapeHtml(item.title)}</h3>
+      ${date ? `<p class="date">${escapeHtml(date)}</p>` : ""}
+      ${item.body ? `<p>${escapeHtml(item.body)}</p>` : `<p class="news-hint">No details.</p>`}
     `;
   }
 
