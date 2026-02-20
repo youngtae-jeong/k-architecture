@@ -1,5 +1,4 @@
 [build]
-  command = "npm run build"
   publish = "."
 
 # Optional: keep /admin working nicely
@@ -7,19 +6,3 @@
   from = "/admin"
   to = "/admin/"
   status = 301
-
-# Pretty URLs
-[[redirects]]
-  from = "/news"
-  to = "/news.html"
-  status = 200
-
-[[redirects]]
-  from = "/contact"
-  to = "/contact.html"
-  status = 200
-
-[[redirects]]
-  from = "/about"
-  to = "/aboutus.html"
-  status = 200
