@@ -1,98 +1,136 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const newsListEl = document.getElementById('newsList');
-  const newsDetailEl = document.getElementById('newsDetail');
-  const newsLayoutEl = document.getElementById('newsLayout');
+(function () {
+  "use strict";
 
-  if (!newsListEl || !newsDetailEl) return;
+  // Resolve base path so /news (pretty URL) still loads assets + JSON correctly.
+  const NEWS_JSON_URL = "/content/news.json";
 
-  // Start: show only the list. Detail appears after a click.
-  hideDetail();
+  const listEl = document.getElementById("news-list");
+  const detailEl = document.getElementById("news-detail");
+  const emptyEl = document.getElementById("news-empty");
 
-  fetch('content/news.json')
-    .then(res => res.json())
-    .then(items => {
-      if (!Array.isArray(items) || items.length === 0) {
-        newsListEl.innerHTML = '<p>No news posts yet.</p>';
-        return;
-      }
-      renderList(items);
-    })
-    .catch(err => {
-      console.error('Failed to load news.json', err);
-      newsListEl.innerHTML = '<p>Failed to load news.</p>';
-    });
-
-  function hideDetail() {
-    newsDetailEl.classList.add('is-hidden');
-    if (newsLayoutEl) newsLayoutEl.classList.remove('has-detail');
-    newsDetailEl.innerHTML = '';
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;")
+      .replace(/'/g, "&#39;");
   }
 
-  function showDetail() {
-    newsDetailEl.classList.remove('is-hidden');
-    if (newsLayoutEl) newsLayoutEl.classList.add('has-detail');
+  function formatDate(dateStr) {
+    if (!dateStr) return "";
+    // Accept ISO or yyyy-mm-dd
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return String(dateStr).slice(0, 10);
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
   }
 
-  function renderList(items) {
-    newsListEl.innerHTML = items.map((item, idx) => {
-      const title = item.title || 'Untitled';
-      const date = item.date || '';
-      const image = item.image || '';
-      const excerpt = item.excerpt || '';
-      return `
-        <div class="news-card" data-idx="${idx}">
-          ${image ? `<img src="${image}" alt="${escapeHtml(title)}" />` : ''}
-          <div class="news-card-body">
-            <h3>${escapeHtml(title)}</h3>
-            ${date ? `<div class="news-date">${escapeHtml(date)}</div>` : ''}
-            ${excerpt ? `<p>${escapeHtml(excerpt)}</p>` : ''}
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    // Attach click handlers
-    [...newsListEl.querySelectorAll('.news-card')].forEach(card => {
-      card.addEventListener('click', () => {
-        const idx = parseInt(card.getAttribute('data-idx'), 10);
-        const item = items[idx];
-        if (!item) return;
-        renderDetail(item);
-        showDetail();
-      });
-    });
+  function renderMarkdownLite(text) {
+    // Simple safe-ish formatting: paragraphs + line breaks.
+    // (We intentionally avoid full markdown parsing for safety/simplicity.)
+    const safe = escapeHtml(text);
+    return safe
+      .split(/\n\n+/)
+      .map((p) => `<p>${p.replace(/\n/g, "<br>")}</p>`)
+      .join("");
   }
 
-  function renderDetail(item) {
-    const title = item.title || '';
-    const date = item.date || '';
-    const image = item.image || '';
-    const body = item.body || item.content || item.description || '';
-    newsDetailEl.innerHTML = `
-      <div class="news-detail-card">
-        <h3>${escapeHtml(title)}</h3>
-        ${date ? `<div class="news-date">${escapeHtml(date)}</div>` : ''}
-        ${image ? `<img src="${image}" alt="${escapeHtml(title)}" />` : ''}
-        ${body ? `<div class="news-body">${formatText(body)}</div>` : ''}
-      </div>
+  function setActiveCard(card) {
+    if (!listEl) return;
+    const cards = listEl.querySelectorAll(".news-card");
+    cards.forEach((c) => c.classList.remove("active"));
+    if (card) card.classList.add("active");
+  }
+
+  function showDetail(item) {
+    if (!detailEl) return;
+
+    // Click-to-show: when nothing selected, keep the panel hidden.
+    detailEl.classList.remove("is-hidden");
+
+    const title = escapeHtml(item.title || "");
+    const date = escapeHtml(formatDate(item.date));
+    const img = item.thumbnail ? `<img class="news-detail-image" src="${escapeHtml(item.thumbnail)}" alt="${title}">` : "";
+    const body = renderMarkdownLite(item.body || item.summary || "");
+
+    detailEl.innerHTML = `
+      <h3 class="news-detail-title">${title}</h3>
+      ${date ? `<div class="news-detail-date">${date}</div>` : ""}
+      ${img}
+      <div class="news-detail-body">${body}</div>
     `;
   }
 
-  function escapeHtml(str) {
-    return String(str)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
+  function hideDetail() {
+    if (!detailEl) return;
+    detailEl.classList.add("is-hidden");
+    detailEl.innerHTML = "";
   }
 
-  function formatText(text) {
-    // Turn newlines into paragraphs, keep it simple.
-    const safe = escapeHtml(text);
-    return safe
-      .split(/\n{2,}/)
-      .map(p => `<p>${p.replaceAll('\n', '<br/>')}</p>`)
-      .join('');
+  function buildCard(item) {
+    const title = escapeHtml(item.title || "");
+    const date = escapeHtml(formatDate(item.date));
+    const thumb = item.thumbnail ? `<img src="${escapeHtml(item.thumbnail)}" alt="${title}">` : "";
+    const summary = escapeHtml(item.summary || "");
+
+    const card = document.createElement("article");
+    card.className = "news-card";
+    card.tabIndex = 0;
+    card.innerHTML = `
+      <div class="news-card-thumb">${thumb}</div>
+      <div class="news-card-meta">
+        <h4 class="news-card-title">${title}</h4>
+        ${date ? `<div class="news-card-date">${date}</div>` : ""}
+        ${summary ? `<div class="news-card-summary">${summary}</div>` : ""}
+      </div>
+    `;
+
+    function onActivate() {
+      setActiveCard(card);
+      showDetail(item);
+    }
+
+    card.addEventListener("click", onActivate);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onActivate();
+      }
+    });
+
+    return card;
   }
-});
+
+  async function init() {
+    if (!listEl || !emptyEl) return;
+
+    // Start with detail hidden; it shows only after clicking.
+    hideDetail();
+
+    try {
+      const res = await fetch(NEWS_JSON_URL, { cache: "no-store" });
+      if (!res.ok) throw new Error(`Failed to fetch news.json: ${res.status}`);
+      const data = await res.json();
+      const items = Array.isArray(data) ? data : (Array.isArray(data.items) ? data.items : []);
+
+      if (!items.length) {
+        emptyEl.style.display = "block";
+        return;
+      }
+
+      emptyEl.style.display = "none";
+      listEl.innerHTML = "";
+      items.forEach((item) => listEl.appendChild(buildCard(item)));
+
+    } catch (err) {
+      console.error(err);
+      emptyEl.style.display = "block";
+      emptyEl.textContent = "Failed to load news posts.";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();

@@ -1,8 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const newsDir = path.join(process.cwd(), "content", "news");
-const outPath = path.join(process.cwd(), "content", "news.json");
+// NOTE: Netlify (or other CI) may run the build command with an unexpected
+// working directory. Use the script location to resolve paths reliably.
+const projectRoot = path.resolve(__dirname, "..");
+const newsDir = path.join(projectRoot, "content", "news");
+const outPath = path.join(projectRoot, "content", "news.json");
 
 function parseFrontmatter(md) {
   const m = md.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/);
