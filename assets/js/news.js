@@ -38,7 +38,7 @@
   };
 
   try {
-    const res = await fetch('content/news.json', { cache: 'no-store' });
+    const res = await fetch('/content/news.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('Failed to load news.json');
 
     /** @type {{title:string,date?:string,thumbnail?:string,image?:string,summary?:string,content?:string,body?:string,slug?:string}[]} */
