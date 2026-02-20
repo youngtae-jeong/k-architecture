@@ -1,72 +1,66 @@
 <!DOCTYPE HTML>
+
 <!--
 	K-Architecture (static)
 	News page (cards + click-to-show detail)
 -->
 <html>
-	<head>
-		<title>K.Architecture | News</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="/assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="/assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
-		<!-- Wrapper -->
-		<div id="wrapper">
+<head>
+<title>K.Architecture | News</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+<link href="/assets/css/main.css" rel="stylesheet"/>
+<noscript><link href="/assets/css/noscript.css" rel="stylesheet"/></noscript>
+</head>
+<body class="is-preload">
+<!-- Wrapper -->
+<div id="wrapper">
+<!-- Header -->
+<header id="header">
+<div class="logo">
+<span class="icon fa-newspaper"></span>
+</div>
+<div class="content">
+<div class="inner">
+<h1>News</h1>
+<p>Latest updates</p>
+</div>
+</div>
+<nav>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/news">News</a></li>
+<li><a href="/aboutus">About</a></li>
+<li><a href="/contact">Contact</a></li>
+</ul>
+</nav>
+</header>
+<!-- Main -->
+<div id="main">
+<article class="active" id="news">
+<h2 class="major">News</h2>
+<p class="news-subtitle">Click a news card to see the details on the right.</p>
+<div class="news-layout" id="newsLayout">
+<!-- Cards (centered, stacked) -->
+<div aria-label="News list" class="news-list" id="newsList"></div>
+<!-- Detail (hidden until a card is clicked) -->
+<div aria-live="polite" class="news-detail is-hidden" id="newsDetail"></div>
+</div>
+</article>
+</div>
+<!-- Footer -->
+<footer id="footer">
+<p class="copyright">© K.Architecture. Design: <a href="https://templated.co">TEMPLATED</a>.</p>
+</footer>
+</div>
+<!-- BG -->
+<div id="bg"></div>
+<!-- Scripts -->
 
-			<!-- Header -->
-			<header id="header">
-				<div class="logo">
-					<span class="icon fa-newspaper"></span>
-				</div>
-				<div class="content">
-					<div class="inner">
-						<h1>News</h1>
-						<p>Latest updates</p>
-					</div>
-				</div>
-				<nav>
-					<ul>
-						<li><a href="/">Home</a></li>
-						<li><a href="/news">News</a></li>
-						<li><a href="/aboutus">About</a></li>
-						<li><a href="/contact">Contact</a></li>
-					</ul>
-				</nav>
-			</header>
 
-			<!-- Main -->
-			<div id="main">
-				<article id="news" class="active">
-					<h2 class="major">News</h2>
-					<p class="news-subtitle">Click a news card to see the details on the right.</p>
 
-					<div id="newsLayout" class="news-layout">
-						<!-- Cards (centered, stacked) -->
-						<div class="news-list" id="newsList" aria-label="News list"></div>
 
-						<!-- Detail (hidden until a card is clicked) -->
-						<div class="news-detail is-hidden" id="newsDetail" aria-live="polite"></div>
-					</div>
-				</article>
-			</div>
 
-			<!-- Footer -->
-			<footer id="footer">
-				<p class="copyright">&copy; K.Architecture. Design: <a href="https://templated.co">TEMPLATED</a>.</p>
-			</footer>
-		</div>
 
-		<!-- BG -->
-		<div id="bg"></div>
-
-		<!-- Scripts -->
-		<script src="/assets/js/jquery.min.js"></script>
-		<script src="/assets/js/browser.min.js"></script>
-		<script src="/assets/js/breakpoints.min.js"></script>
-		<script src="/assets/js/util.js"></script>
-		<script src="/assets/js/main.js"></script>
-		<script src="/assets/js/news.js"></script>
-	</body>
+<script src="/assets/js/jquery.min.js"></script><script src="/assets/js/jquery.scrollex.min.js"></script><script src="/assets/js/skel.min.js"></script><script src="/assets/js/util.js"></script><script src="/assets/js/main.js"></script><script src="/assets/js/news.js"></script></body>
 </html>
