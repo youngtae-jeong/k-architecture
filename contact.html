@@ -21,7 +21,7 @@
     <nav id="menu">
       <ul class="links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="news.html">News</a></li>
+        <li><a href="index.html#news">News</a></li>
         <li><a href="aboutus.html">About us</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
@@ -110,28 +110,36 @@
 <div id="kakao-map"></div>
 
 <!-- Kakao Map -->
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_JAVASCRIPT_KEY&libraries=services"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e845236ec825decc8aad1cfafc909e60&libraries=services&autoload=false"></script>
 <script>
-  (function () {
-    var container = document.getElementById('kakao-map');
-    if (!container || !window.kakao || !kakao.maps) return;
+(function () {
+  var container = document.getElementById('kakao-map');
+  if (!container) return;
 
-    var coords = new kakao.maps.LatLng(37.534908294677734, 126.73712158203125);
-    var map = new kakao.maps.Map(container, {
-      center: coords,
-      level: 3
-    });
+  function initKakaoMap() {
+    // Address: #502, 11, Ojosan-ro 45beongil, Gyeyang-gu, Incheon
+    var coords = new kakao.maps.LatLng(37.536864, 126.734411);
+    var map = new kakao.maps.Map(container, { center: coords, level: 3 });
+    var marker = new kakao.maps.Marker({ position: coords });
+    marker.setMap(map);
+  }
 
-    var marker = new kakao.maps.Marker({
-      map: map,
-      position: coords
-    });
+  // If SDK was loaded with autoload=false, we must call kakao.maps.load().
+  function safeLoad() {
+    if (window.kakao && kakao.maps && typeof kakao.maps.load === 'function') {
+      kakao.maps.load(initKakaoMap);
+    }
+  }
 
-    var info = new kakao.maps.InfoWindow({
-      content: '<div style="padding:6px 10px;font-size:12px;">K.Architecture</div>'
-    });
-    info.open(map, marker);
-  })();
+  // Try immediately (in case SDK is already there)
+  safeLoad();
+
+  // Also bind to SDK script onload (for normal page loads)
+  var sdkScript = document.querySelector('script[src*="dapi.kakao.com/v2/maps/sdk.js"]');
+  if (sdkScript) {
+    sdkScript.addEventListener('load', safeLoad);
+  }
+})();
 </script>
 
             </div>
