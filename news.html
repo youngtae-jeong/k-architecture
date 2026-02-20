@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-    <title>News | K.Architecture</title>
+    <title>News</title>
     <meta charset="utf-8" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,184 +21,38 @@
     <nav id="menu">
       <ul class="links">
         <li><a href="index.html">Home</a></li>
-        <li><a href="index.html#news">News</a></li>
+        <li><a href="news.html">News</a></li>
         <li><a href="aboutus.html">About us</a></li>
         <li><a href="contact.html">Contact</a></li>
       </ul>
     </nav>
-<style>
-        /* 기본 PC 레이아웃 (가로 배치) */
-        .contact-wrapper {
-            display: flex;
-            flex-direction: row;
-            gap: 2rem;
-            align-items: flex-start;
-        }
-
-        #kakao-map {
-            width: 500px;
-            height: 400px;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-
-        .contact-form {
-            flex: 1;
-        }
-
-        /* 모바일 레이아웃 (세로 배치) */
-        @media (max-width: 768px) {
-            .contact-wrapper {
-                flex-direction: column;
-            }
-            #kakao-map {
-                width: 100%;
-                height: 300px; /* 모바일 환경에 맞춰 높이 조정 */
-            }
-            .table-wrapper table td {
-                font-size: 0.9em; /* 모바일 가독성을 위해 폰트 크기 조정 */
-            }
-        }
-
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 </head>
 <body class="subpage">
-    
-<section id="one" class="wrapper style2">
-  <div class="inner">
-    <section id="news" class="wrapper style2">
-      <div class="inner">
-        <header class="align-center">
-          <p>Latest updates</p>
-          <h2>News</h2>
-        </header>
-
-        <div class="news-layout">
-          <div class="news-list" id="newsList">
-            <p class="news-hint">Loading news…</p>
-          </div>
-
-          <div class="news-detail" id="newsDetail">
-            <p class="news-hint">Select a news item.</p>
-          </div>
+    <section id="One" class="wrapper style3">
+        <div class="inner">
+            <header class="align-center">
+                <p>K.ARCHITECTURE</p>
+                <h2>Contact</h2>
+            </header>
         </div>
-      </div>
     </section>
-  </div>
-</section>
-
 
     <div id="main" class="container">
-        <h2 id="Contact">Contact</h2>
-        <div class="contact-wrapper">
-            <div class="contact-details">
-                <h4>Address</h4>
-                <div class="table-wrapper">
-                    <table class="alt">
-                        <thead>
-                            <tr>
-                                <td>K.Architecture 케이건축사사무소.</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>#502, 11, Ojosan-ro 45beongil, Gyeyang-gu, Incheon</td>
-                            </tr>
-                            <tr>
-                                <td>T 032-716-6877 / F 070-8233-6877.</td>
-                            </tr>
-                            <tr>
-                                <td>E eunjjoun01@k-architecture.co.kr</td>
-                            </tr>
-                            <tr>
-                                <td>Directions: Gyeyang-gu Office + 8-minute walk</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-<div id="kakao-map"></div>
 
-<!-- Kakao Map -->
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e845236ec825decc8aad1cfafc909e60&libraries=services"></script>
-<script>
-  (function () {
-    var container = document.getElementById('kakao-map');
-    if (!container || !window.kakao || !kakao.maps) return;
+<section id="news" class="major">
+  <header class="major">
+    <h2>News</h2>
+    <p>Latest updates</p>
+  </header>
 
-    var coords = new kakao.maps.LatLng(37.534908294677734, 126.73712158203125);
-    var map = new kakao.maps.Map(container, {
-      center: coords,
-      level: 3
-    });
+  <div class="news-layout" id="newsLayout">
+    <div class="news-list" id="newsList"></div>
+    <div class="news-detail is-hidden" id="newsDetail"></div>
+  </div>
+</section>
+</div>
 
-    var marker = new kakao.maps.Marker({
-      map: map,
-      position: coords
-    });
-
-    var info = new kakao.maps.InfoWindow({
-      content: '<div style="padding:6px 10px;font-size:12px;">K.Architecture</div>'
-    });
-    info.open(map, marker);
-  })();
-</script>
-
-            </div>
-
-            <div class="contact-form">
-                <iframe name="frAttachFiles" style="display:none;"></iframe>
-                <form role="form" method="post" action="https://script.google.com/macros/s/AKfycbwu13sqFPlAwgWE-MyYTKN1QF6oBqcjHL_OeFP_QFponUEIlSZYJF6ogr-z2cSG_FeW/exec" target="frAttachFiles" onSubmit="alert( 'Thank you!' );">
-                    <div class="row uniform">
-                        <div class="6u 12u$(xsmall)">
-                            <label for="wr_name">이름 (required)</label>
-                            <input type="text" name="name" id="name" value="" placeholder="Name">
-                        </div>
-                        <div class="6u$ 12u$(xsmall)">
-                            <label for="Email">Email (required)</label>
-                            <input type="email" name="email" id="email" value="" placeholder="Email">
-                        </div>
-                        <div class="form-group">
-                            <label for="contact">연락처</label>
-                            <input type="text" name="contact" id="contact" placeholder="Enter your contact">
-                        </div>
-                        <div class="12u$">
-                            <div class="select-wrapper">
-                                <label for="contact">목적 (required)</label>
-                                <select name="category" id="category">
-                                    <option value="">- Select an option -</option>
-                                    <option value="현상설계">현상설계</option>
-                                    <option value="실시설계">실시설계</option>
-                                    <option value="건축인허가">건축인허가</option>
-                                    <option value="건축감리">건축감리</option>
-                                    <option value="해체공사감리">해체공사감리</option>
-                                    <option value="건축디자인">건축디자인</option>
-                                    <option value="기타">기타</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="12u$">
-                            <textarea name="message" id="message" placeholder="Enter your message" rows="6"></textarea>
-                        </div>
-                        <div class="12u$">
-                            <ul class="actions">
-                                <li><input type="submit" value="Send Message"></li>
-                                <li><input type="reset" value="Reset" class="alt"></li>
-                            </ul>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <footer id="footer">
+<footer id="footer">
         <div class="container">
             <ul class="icons">
             <li><a href="https://x.com/eunjjoun01?t=-OIHQxmU4uOA1Kneg1qt4Q&s=32에서" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
@@ -216,8 +70,8 @@
     <script src="assets/js/jquery.scrollex.min.js"></script>
     <script src="assets/js/skel.min.js"></script>
     <script src="assets/js/util.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/news.js"></script>
+<script src="assets/js/main.js"></script>
 
-  <script src="assets/js/news.js"></script>
 </body>
 </html>

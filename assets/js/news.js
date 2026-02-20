@@ -1,70 +1,98 @@
-// News loader for K.Architecture (static JSON generated at build time)
-//
-// Data source: /content/news.json
-// - If you use Decap CMS (/admin), news posts are saved in /content/news/*.md
-// - Netlify build script converts those markdown files into /content/news.json
+document.addEventListener('DOMContentLoaded', () => {
+  const newsListEl = document.getElementById('newsList');
+  const newsDetailEl = document.getElementById('newsDetail');
+  const newsLayoutEl = document.getElementById('newsLayout');
 
-(async function () {
-  const listEl = document.getElementById("newsList");
-  const detailEl = document.getElementById("newsDetail");
-  
-  if (detailEl) { detailEl.innerHTML = `<h3>News</h3><p class="news-hint">Click a news card to read details.</p>`; }
-if (!listEl || !detailEl) return;
+  if (!newsListEl || !newsDetailEl) return;
 
-  function escapeHtml(s) {
-    return String(s || "").replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;",
-    }[m]));
+  // Start: show only the list. Detail appears after a click.
+  hideDetail();
+
+  fetch('content/news.json')
+    .then(res => res.json())
+    .then(items => {
+      if (!Array.isArray(items) || items.length === 0) {
+        newsListEl.innerHTML = '<p>No news posts yet.</p>';
+        return;
+      }
+      renderList(items);
+    })
+    .catch(err => {
+      console.error('Failed to load news.json', err);
+      newsListEl.innerHTML = '<p>Failed to load news.</p>';
+    });
+
+  function hideDetail() {
+    newsDetailEl.classList.add('is-hidden');
+    if (newsLayoutEl) newsLayoutEl.classList.remove('has-detail');
+    newsDetailEl.innerHTML = '';
+  }
+
+  function showDetail() {
+    newsDetailEl.classList.remove('is-hidden');
+    if (newsLayoutEl) newsLayoutEl.classList.add('has-detail');
   }
 
   function renderList(items) {
-    if (!items.length) {
-      listEl.innerHTML = '<p class="news-hint">No news yet.</p>';
-      return;
-    }
-
-    listEl.innerHTML = items.map((item) => `
-      <div class="news-card" data-slug="${escapeHtml(item.slug)}">
-        ${item.thumbnail ? `<img src="${escapeHtml(item.thumbnail)}" alt="">` : ""}
-        <div class="content">
-          <p class="title">${escapeHtml(item.title)}</p>
-          <p class="date">${escapeHtml((item.date || "").slice(0, 10))}</p>
-          ${item.summary ? `<p class="meta">${escapeHtml(item.summary)}</p>` : ""}
+    newsListEl.innerHTML = items.map((item, idx) => {
+      const title = item.title || 'Untitled';
+      const date = item.date || '';
+      const image = item.image || '';
+      const excerpt = item.excerpt || '';
+      return `
+        <div class="news-card" data-idx="${idx}">
+          ${image ? `<img src="${image}" alt="${escapeHtml(title)}" />` : ''}
+          <div class="news-card-body">
+            <h3>${escapeHtml(title)}</h3>
+            ${date ? `<div class="news-date">${escapeHtml(date)}</div>` : ''}
+            ${excerpt ? `<p>${escapeHtml(excerpt)}</p>` : ''}
+          </div>
         </div>
-      </div>
-    `).join("");
+      `;
+    }).join('');
 
-    listEl.onclick = (e) => {
-      const card = e.target.closest(".news-card");
-      if (!card) return;
-      const slug = card.getAttribute("data-slug");
-      const item = items.find((x) => x.slug === slug);
-      if (item) renderDetail(item);
-    };
+    // Attach click handlers
+    [...newsListEl.querySelectorAll('.news-card')].forEach(card => {
+      card.addEventListener('click', () => {
+        const idx = parseInt(card.getAttribute('data-idx'), 10);
+        const item = items[idx];
+        if (!item) return;
+        renderDetail(item);
+        showDetail();
+      });
+    });
   }
 
   function renderDetail(item) {
-    const date = (item.date || "").slice(0, 10);
-    // Display markdown as plain text (simple, safe). If you want rich markdown later, we can add a renderer.
-    detailEl.innerHTML = `
-      <h3>${escapeHtml(item.title)}</h3>
-      ${date ? `<p class="date">${escapeHtml(date)}</p>` : ""}
-      ${item.body ? `<p>${escapeHtml(item.body)}</p>` : `<p class="news-hint">No details.</p>`}
+    const title = item.title || '';
+    const date = item.date || '';
+    const image = item.image || '';
+    const body = item.body || item.content || item.description || '';
+    newsDetailEl.innerHTML = `
+      <div class="news-detail-card">
+        <h3>${escapeHtml(title)}</h3>
+        ${date ? `<div class="news-date">${escapeHtml(date)}</div>` : ''}
+        ${image ? `<img src="${image}" alt="${escapeHtml(title)}" />` : ''}
+        ${body ? `<div class="news-body">${formatText(body)}</div>` : ''}
+      </div>
     `;
   }
 
-  try {
-    const res = await fetch("/content/news.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("Failed to load /content/news.json");
-    const data = await res.json();
-    const items = Array.isArray(data.items) ? data.items : [];
-    renderList(items);
-    if (items[0]) renderDetail(items[0]);
-  } catch (err) {
-    listEl.innerHTML = '<p class="news-hint">News data not found. If you deploy with Netlify + CMS, make sure the build script generates <code>/content/news.json</code>.</p>';
+  function escapeHtml(str) {
+    return String(str)
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
-})();
+
+  function formatText(text) {
+    // Turn newlines into paragraphs, keep it simple.
+    const safe = escapeHtml(text);
+    return safe
+      .split(/\n{2,}/)
+      .map(p => `<p>${p.replaceAll('\n', '<br/>')}</p>`)
+      .join('');
+  }
+});
