@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/assets/css/main.css" />
+    <link rel="stylesheet" href="/assets/css/news-custom.css" />
   </head>
   <body class="subpage">
 
@@ -32,18 +33,16 @@
         <header class="align-center">
           <p>Latest updates</p>
           <h2>News</h2>
-          <p style="margin-top: 1rem; opacity:.8;">Click a news photo to see details on the right. Click again to close.</p>
+          <p style="margin-top: 1rem; opacity:.8;">Click a news card to see the details.</p>
         </header>
 
-        <div id="news-empty" style="display:none; text-align:center; opacity:.7;">No news posts yet.</div>
+        <div class="news-layout">
+          <div id="news-empty" style="display:none;">No news posts yet.</div>
 
-        <!--
-          This page reuses the exact same "box" layout and click-to-toggle behavior
-          as the Home page.
-          - Cards render into .grid-style.
-          - main.js handles click -> open (.box.active), click again -> close.
-        -->
-        <div class="grid-style" id="news-grid" aria-label="News list"></div>
+          <div id="news-list" aria-label="News list"></div>
+
+          <div id="news-detail" class="is-hidden" aria-live="polite"></div>
+        </div>
       </div>
     </section>
 
