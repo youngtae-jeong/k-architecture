@@ -1,5 +1,4 @@
 [build]
-  [build]
   publish = "."
 
 # Optional: keep /admin working nicely
