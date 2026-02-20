@@ -64,3 +64,64 @@
 @media (max-width: 720px) {
   .news-card { width: 100%; max-width: 420px; }
 }
+
+
+/* --- UI update: make News page layout match home (image left / text right) --- */
+@media (min-width: 901px){
+  .news-layout{
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: start;
+    justify-content: center;
+  }
+
+  #news-list{
+    max-width: 360px;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+  }
+
+  .news-card{
+    width: 100%;
+  }
+
+  #news-detail{
+    max-width: 100%;
+  }
+}
+
+/* Detail split (image left, text right) */
+.news-detail-split{
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2.25rem;
+  align-items: start;
+}
+
+.news-detail-media img{
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
+.news-detail-content .news-detail-title{
+  margin-top: 0;
+}
+
+.news-detail-image{ /* legacy safety: if any old markup still uses this */
+  width:100%;
+  height:auto;
+  border-radius: 6px;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 900px){
+  .news-detail-split{
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
