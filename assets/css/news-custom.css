@@ -31,7 +31,8 @@
   outline: none;
   width: 100%;
   max-width: 520px;
-  transition: box-shadow .25s ease, transform .35s ease;
+  transition: box-shadow .25s ease, transform .45s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
 }
 
 .news-card.active {
@@ -50,51 +51,64 @@
 
 #news-empty { opacity: .7; }
 
-/* --- Per-item container --- */
+/* --- Per-item container ---
+   IMPORTANT: keep the two-column layout *always on* to avoid layout "jumps".
+   We animate only transform/opacity (GPU-friendly) for a smoother feel.
+*/
 .news-item{
+  --card-w: 520px;
+  --detail-w: 680px;
+  --gap: 2.5rem;
+
   width: 100%;
-  display: flex;
-  justify-content: center; /* centered by default */
-  align-items: flex-start;
-  gap: 2.5rem;
+  display: grid;
+  grid-template-columns: var(--card-w) var(--detail-w);
+  gap: var(--gap);
+  align-items: start;
+  justify-content: center;
 }
 
-/* The inline detail area exists for every item, but is visually closed by default */
+/* Ensure the card uses the fixed column width (no max-width reflow) */
+.news-card{
+  max-width: none;
+  width: 100%;
+}
+
+/* Closed state: card looks centered by shifting it right into the empty detail column */
+.news-item:not(.is-open) .news-card{
+  transform: translateX(calc((var(--detail-w) + var(--gap)) / 2));
+}
+
+/* The inline detail area exists for every item, but starts hidden */
 .news-inline-detail{
-  max-width: 0;
+  width: 100%;
   opacity: 0;
-  transform: translateX(12px);
-  overflow: hidden;
+  transform: translateX(18px);
   pointer-events: none;
+  visibility: hidden;
 
   background: #fff;
   border-radius: 6px;
   box-shadow: 0 2px 12px rgba(0,0,0,.08);
+  padding: 1.25rem;
 
   transition:
-    max-width .35s ease,
-    opacity .35s ease,
-    transform .35s ease,
-    padding .35s ease;
+    opacity .36s ease,
+    transform .46s cubic-bezier(.22,.61,.36,1);
 
-  padding: 0; /* animate into padding */
+  will-change: opacity, transform;
 }
 
 /* OPEN state */
-.news-item.is-open{
-  justify-content: flex-start;
-}
-
 .news-item.is-open .news-card{
-  transform: translateX(-40px); /* gives the "moves left" feeling */
+  transform: translateX(0);
 }
 
 .news-item.is-open .news-inline-detail{
-  max-width: 680px;
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
-  padding: 1.25rem;
+  visibility: visible;
 }
 
 /* Detail split (image left, text right) */
@@ -119,21 +133,20 @@
 /* Responsive: stack on small screens */
 @media (max-width: 900px){
   .news-item{
-    flex-direction: column;
-    justify-content: center;
+    grid-template-columns: 1fr;
+    justify-items: center;
     gap: 1rem;
-    align-items: center;
   }
 
   .news-card{
     max-width: 420px;
   }
 
-  .news-item.is-open .news-card{
+  .news-item:not(.is-open) .news-card{
     transform: none;
   }
 
-  .news-item.is-open .news-inline-detail{
+  .news-inline-detail{
     max-width: 420px;
     width: 100%;
     padding: 1rem;

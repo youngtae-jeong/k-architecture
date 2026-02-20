@@ -72,7 +72,7 @@
         // Only clear if still closed and still the same item (prevents race conditions)
         if (!activeItemEl || activeKey !== prevKey) return;
         detail.innerHTML = "";
-      }, 260);
+      }, 520);
     }
 
     activeKey = null;
@@ -89,11 +89,16 @@
     const card = itemEl.querySelector(".news-card");
     if (!detail || !card) return;
 
-    // Fill content before opening so it fades in smoothly.
+    // Fill content first.
     detail.innerHTML = buildInlineDetail(item);
 
-    itemEl.classList.add("is-open");
-    card.classList.add("active");
+    // Add the open class on the next frame to ensure the browser
+    // has applied the "closed" styles first (prevents a "jerk" on first open).
+    requestAnimationFrame(() => {
+      itemEl.classList.add("is-open");
+      card.classList.add("active");
+      card.setAttribute("aria-expanded", "true");
+    });
 
     activeKey = key;
     activeItemEl = itemEl;
@@ -140,13 +145,11 @@
         // Clear after transition
         setTimeout(() => {
           if (!itemEl.classList.contains("is-open")) detail.innerHTML = "";
-        }, 260);
+        }, 520);
         activeKey = null;
         activeItemEl = null;
         return;
       }
-
-      card.setAttribute("aria-expanded", "true");
       openItem(itemEl, item, key);
     }
 
