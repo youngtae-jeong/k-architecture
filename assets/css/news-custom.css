@@ -1,171 +1,32 @@
-/* News page UI (home-style interaction)
-   - Each card is centered by default.
-   - Click a card: the card shifts left smoothly and its detail appears to the right.
-   - Click the same card again: detail fades out and the card returns to center.
-*/
 
-.news-wrapper { padding-top: 2.5rem; }
+/* Updated version: No cropping, natural image ratio */
 
-.news-layout {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.75rem;
-}
-
-#news-list {
+.news-card-thumb {
   width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-/* --- Card styling (kept close to original) --- */
-.news-card {
-  cursor: pointer;
-  background: #fff;
-  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
-  outline: none;
-  width: 100%;
-  max-width: 520px;
-  transition: box-shadow .25s ease, transform .45s cubic-bezier(.22,.61,.36,1);
-  will-change: transform;
-}
-
-.news-card.active {
-  box-shadow: 0 4px 18px rgba(0,0,0,.16);
-}
-
-.news-card-thumb{
-  width:100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: rgba(0,0,0,.03);
 }
 
 .news-card-thumb img {
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit: cover;
-}
-
-.news-card-meta { padding: 1rem 1.1rem; }
-
-.news-card-title { margin: 0 0 .35rem 0; font-size: 1.05rem; }
-
-.news-card-date { opacity: .65; font-size: .9rem; margin-bottom: .5rem; }
-
-.news-card-summary { opacity: .85; font-size: .95rem; }
-
-#news-empty { opacity: .7; }
-
-/* --- Per-item container ---
-   IMPORTANT: keep the two-column layout *always on* to avoid layout "jumps".
-   We animate only transform/opacity (GPU-friendly) for a smoother feel.
-*/
-.news-item{
-  --card-w: 520px;
-  --detail-w: 680px;
-  --gap: 2.5rem;
-
-  width: 100%;
-  display: grid;
-  grid-template-columns: var(--card-w) var(--detail-w);
-  gap: var(--gap);
-  align-items: start;
-  justify-content: center;
-}
-
-/* Ensure the card uses the fixed column width (no max-width reflow) */
-.news-card{
-  max-width: none;
-  width: 100%;
-}
-
-/* Closed state: card looks centered by shifting it right into the empty detail column */
-.news-item:not(.is-open) .news-card{
-  transform: translateX(calc((var(--detail-w) + var(--gap)) / 2));
-}
-
-/* The inline detail area exists for every item, but starts hidden */
-.news-inline-detail{
-  width: 100%;
-  opacity: 0;
-  transform: translateX(18px);
-  pointer-events: none;
-  visibility: hidden;
-
-  background: #fff;
-  border-radius: 6px;
-  box-shadow: 0 2px 12px rgba(0,0,0,.08);
-  padding: 1.25rem;
-
-  transition:
-    opacity .36s ease,
-    transform .46s cubic-bezier(.22,.61,.36,1);
-
-  will-change: opacity, transform;
-}
-
-/* OPEN state */
-.news-item.is-open .news-card{
-  transform: translateX(0);
-}
-
-.news-item.is-open .news-inline-detail{
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: auto;
-  visibility: visible;
-}
-
-/* Detail split (image left, text right) */
-.news-inline-split{
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 2.25rem;
-  align-items: start;
-}
-
-.news-inline-media img{
   width: 100%;
   height: auto;
+  object-fit: contain;
   display: block;
-  border-radius: 6px;
 }
 
-.news-inline-title{ margin: 0 0 .25rem 0; }
-.news-inline-date{ opacity: .65; margin-bottom: 1rem; }
-.news-inline-body p{ margin: 0 0 .85rem 0; }
+.news-detail-inner {
+  padding: 60px;
+}
 
-/* Responsive: stack on small screens */
-@media (max-width: 900px){
-  .news-item{
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 1rem;
-  }
+.news-detail h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
 
-  .news-card{
-    max-width: 420px;
-  }
+.news-date {
+  color: #999;
+  margin-bottom: 20px;
+}
 
-  .news-item:not(.is-open) .news-card{
-    transform: none;
-  }
-
-  .news-inline-detail{
-    max-width: 420px;
-    width: 100%;
-    padding: 1rem;
-  }
-
-  .news-inline-split{
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
+.news-body {
+  line-height: 1.8;
 }
