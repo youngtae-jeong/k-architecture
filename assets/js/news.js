@@ -51,6 +51,7 @@
     `;
   }
 
+
   function closeActive() {
     if (!activeItemEl) return;
 
