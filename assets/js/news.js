@@ -40,19 +40,13 @@
   function buildInlineDetail(item) {
     const title = escapeHtml(item.title || "");
     const date = escapeHtml(formatDate(item.date));
-    const img = item.thumbnail
-      ? `<img class="news-inline-image" src="${escapeHtml(item.thumbnail)}" alt="${title}">`
-      : "";
     const body = renderMarkdownLite(item.body || item.summary || "");
 
     return `
-      <div class="news-inline-split">
-        <div class="news-inline-media">${img}</div>
-        <div class="news-inline-content">
-          <h3 class="news-inline-title">${title}</h3>
-          ${date ? `<div class="news-inline-date">${date}</div>` : ""}
-          <div class="news-inline-body">${body}</div>
-        </div>
+      <div class="news-inline-content">
+        <h3 class="news-inline-title">${title}</h3>
+        ${date ? `<div class="news-inline-date">${date}</div>` : ""}
+        <div class="news-inline-body">${body}</div>
       </div>
     `;
   }
