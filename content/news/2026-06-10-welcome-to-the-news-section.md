@@ -8,3 +8,7 @@ summary: "The City Center of Incheon Urban Regeneration. Topic: Urban
 2026 Urban Regeneration Education Program Support Project for the Revitalization of Incheon Old Downtown
 
 Participants: Inha University, Yonsei University Faculty and Student Achievement Sharing Session
+
+Exhibition Dates: June 9 - 19, 2026
+
+Venue: Baeknyeonieum
